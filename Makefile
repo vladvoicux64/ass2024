@@ -1,5 +1,5 @@
 ATF_DIR = imx-atf
-ATF_MAKE_FLAGS = SPD=none PLAT=TODO...
+ATF_MAKE_FLAGS = SPD=none PLAT=imx8mq
 atf:
 	cd "$(ATF_DIR)" && \
 	make $(ATF_MAKE_FLAGS)
