@@ -1,3 +1,6 @@
 [submodule "imx-atf"]
 	path = imx-atf
 	url = https://github.com/nxp-imx/imx-atf.git
+[submodule "u-boot-tn-imx"]
+	path = u-boot-tn-imx
+	url = https://github.com/TechNexion/u-boot-tn-imx.git
