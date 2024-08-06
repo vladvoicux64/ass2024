@@ -9,9 +9,12 @@ atf:
 UBOOT_DIR = u-boot-tn-imx
 UBOOT_MAKE_FLAGS =
 uboot:
+	cp -f uboot-extra.config $(UBOOT_DIR)/
 	cd "$(UBOOT_DIR)" && \
-	make $(UBOOT_MAKE_FLAGS)
- 
+		[[ -f ".config" ]] || make pico-imx8mq_defconfig && \
+		./scripts/kconfig/merge_config.sh ".config" "uboot-extra.config" && \
+		make $(UBOOT_MAKE_FLAGS)
+
 .PHONY: uboot atf firmware_pkg flash
 
 FW_PCKG_DIR = imx-mkimage/iMX8M
