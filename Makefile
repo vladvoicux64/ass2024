@@ -15,7 +15,7 @@ uboot:
 		./scripts/kconfig/merge_config.sh ".config" "uboot-extra.config" && \
 		make $(UBOOT_MAKE_FLAGS)
 
-.PHONY: uboot atf firmware_pkg flash
+.PHONY: uboot atf firmware_pkg flash linux
 
 FW_PCKG_DIR = imx-mkimage/iMX8M
 FW_DIR = firmware-imx-8.22/firmware
@@ -36,8 +36,27 @@ firmware_pkg:
 	make SOC=iMX8M dtbs=imx8mq-pico-pi.dtb flash_evk
 
 UUU_DIR = mfgtools/build/uuu
-flash: atf uboot firmware_pkg
+flash_prep: atf uboot firmware_pkg
 	cd mfgtools && \
 	mkdir build && cd build && cmake .. && cmake --build .
+
+flash: flash_prep
 	cd "$(UUU_DIR)" && \
 	sudo ./uuu -b spl ../../../imx-mkimage/iMX8M/flash.bin
+
+linux:
+	cd linux && \
+	make ARCH=arm64 defconfig && \
+	make ARCG=arm64
+
+clean:
+	rm -rf \
+	$(ATF_DIR)/build/imx8mq/release/bl31.bin \
+	$(UBOOT_DIR)/spl/u-boot-spl.bin \
+	$(UBOOT_DIR)/u-boot-nodtb.bin \
+	$(UBOOT_DIR)/arch/arm/dts/imx8mq-pico-pi.dtb \
+	"$(FW_PCKG_DIR)/mkimage_uboot" \
+	"$(FW_PCKG_DIR)/flash.bin" \
+	"mfgtools/build"
+
+
