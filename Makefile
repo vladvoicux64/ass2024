@@ -49,6 +49,13 @@ linux:
 	make ARCH=arm64 defconfig && \
 	make ARCH=arm64 -j4
 
+buildroot:
+	cp -f buildroot-extra.config "buildroot/"
+	cd "buildroot""&& \
+		[[ -f ".config" ]] || make imx8mqevk_defconfig && \
+		./support/kconfig/merge_config.sh ".config" "buildroot-extra.config" && \
+		make
+
 clean:
 	rm -rf \
 	$(ATF_DIR)/build/imx8mq/release/bl31.bin \
