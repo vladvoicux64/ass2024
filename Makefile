@@ -37,5 +37,7 @@ firmware_pkg:
 
 UUU_DIR = mfgtools/build/uuu
 flash: atf uboot firmware_pkg
+	cd mfgtools && \
+	mkdir build && cd build && cmake .. && cmake --build .
 	cd "$(UUU_DIR)" && \
 	sudo ./uuu -b spl ../../../imx-mkimage/iMX8M/flash.bin
