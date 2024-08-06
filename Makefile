@@ -47,7 +47,7 @@ flash: flash_prep
 linux:
 	cd linux && \
 	make ARCH=arm64 defconfig && \
-	make ARCG=arm64
+	make ARCH=arm64
 
 clean:
 	rm -rf \
