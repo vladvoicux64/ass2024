@@ -25,7 +25,7 @@ MKIMAGE_COPY_FILES = \
 	$(ATF_DIR)/build/imx8mq/release/bl31.bin \
 	$(UBOOT_DIR)/spl/u-boot-spl.bin \
 	$(UBOOT_DIR)/u-boot-nodtb.bin \
-	$(UBOOT_DIR)/arch/arm/dts/$(UBOOT_DTB_NAME)
+	$(UBOOT_DIR)/arch/arm/dts/imx8mq-pico-pi.dtb
 firmware_pkg:
 	cp -f "$(UBOOT_DIR)/tools/mkimage" "$(FW_PCKG_DIR)/mkimage_uboot" && \
 	cp -f MKIMAGE_COPY_FILES "$(FW_PCKG_DIR)/" && \
