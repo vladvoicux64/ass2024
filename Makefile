@@ -31,7 +31,7 @@ MKIMAGE_COPY_FILES = \
 	$(UBOOT_DIR)/arch/arm/dts/imx8mq-pico-pi.dtb
 firmware_pkg:
 	cp -f "$(UBOOT_DIR)/tools/mkimage" "$(FW_PCKG_DIR)/mkimage_uboot" && \
-	cp -f MKIMAGE_COPY_FILES "$(FW_PCKG_DIR)/" && \
+	cp -f $(MKIMAGE_COPY_FILES) "$(FW_PCKG_DIR)/" && \
 	cd "imx-mkimage" && \
 	make SOC=iMX8M dtbs=imx8mq-pico-pi.dtb flash_evk
 
