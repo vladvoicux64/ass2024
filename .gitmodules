@@ -10,3 +10,6 @@
 [submodule "mfgtools"]
 	path = mfgtools
 	url = https://github.com/nxp-imx/mfgtools.git
+[submodule "linux"]
+	path = linux
+	url = https://github.com/torvalds/linux.git
