@@ -54,7 +54,7 @@ buildroot:
 	cd "buildroot""&& \
 		[[ -f ".config" ]] || make imx8mqevk_defconfig && \
 		./support/kconfig/merge_config.sh ".config" "buildroot-extra.config" && \
-		make
+		sudo make
 
 clean:
 	rm -rf \
