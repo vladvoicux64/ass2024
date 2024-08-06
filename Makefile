@@ -56,6 +56,10 @@ buildroot:
 		./support/kconfig/merge_config.sh ".config" "buildroot-extra.config" && \
 		make
 
+fit:
+	cd "staging" && \
+		mkimage -f linux.its linux.itb
+
 clean:
 	rm -rf \
 	$(ATF_DIR)/build/imx8mq/release/bl31.bin \
