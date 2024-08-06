@@ -47,7 +47,7 @@ flash: flash_prep
 linux:
 	cd linux && \
 	make ARCH=arm64 defconfig && \
-	make ARCH=arm64 -j$(nproc)
+	make ARCH=arm64 -j4
 
 clean:
 	rm -rf \
@@ -58,5 +58,3 @@ clean:
 	"$(FW_PCKG_DIR)/mkimage_uboot" \
 	"$(FW_PCKG_DIR)/flash.bin" \
 	"mfgtools/build"
-
-
