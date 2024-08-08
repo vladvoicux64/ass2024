@@ -1,7 +1,8 @@
 # This Makefile works on Aarch64 based environments.
 
+UART_BASE = 0x30860000
 ATF_DIR = imx-atf
-ATF_MAKE_FLAGS = SPD=opteed PLAT=imx8mq BL32_BASE=0xbdc00000 BL32_SIZE=0x4400000 LOG_LEVEL=40 IMX_BOOT_UART_BASE=0x30860000
+ATF_MAKE_FLAGS = SPD=opteed PLAT=imx8mq BL32_BASE=0xbdc00000 BL32_SIZE=0x4400000 LOG_LEVEL=40 IMX_BOOT_UART_BASE=$(UART_BASE)
 atf:
 	cd "$(ATF_DIR)" && \
 	make $(ATF_MAKE_FLAGS)
@@ -19,6 +20,8 @@ uboot:
 
 FW_PCKG_DIR = imx-mkimage/iMX8M
 FW_DIR = firmware-imx-8.22/firmware
+TEE_LOAD_ADDR=0xbdc00000
+OP_TEE_DIR = optee_os
 MKIMAGE_COPY_FILES = \
 	$(FW_DIR)/ddr/synopsys/lpddr4_pmu_train_1d_dmem.bin \
 	$(FW_DIR)/ddr/synopsys/lpddr4_pmu_train_1d_imem.bin \
@@ -28,10 +31,11 @@ MKIMAGE_COPY_FILES = \
 	$(ATF_DIR)/build/imx8mq/release/bl31.bin \
 	$(UBOOT_DIR)/spl/u-boot-spl.bin \
 	$(UBOOT_DIR)/u-boot-nodtb.bin \
-	$(UBOOT_DIR)/arch/arm/dts/imx8mq-pico-pi.dtb
-firmware_pkg: uboot
+	$(UBOOT_DIR)/arch/arm/dts/imx8mq-pico-pi.dtb 
+firmware_pkg: uboot op-tee atf
 	cp -f "$(UBOOT_DIR)/tools/mkimage" "$(FW_PCKG_DIR)/mkimage_uboot" && \
 	cp -f $(MKIMAGE_COPY_FILES) "$(FW_PCKG_DIR)/" && \
+	cp -f "$(OP_TEE_DIR)/out/arm/core/tee-raw.bin" "$(FW_PCKG_DIR)/" && \
 	cd "imx-mkimage" && \
 	make SOC=iMX8M dtbs=imx8mq-pico-pi.dtb flash_evk
 
@@ -58,9 +62,10 @@ buildroot:
 
 fit:
 	cd "staging" && \
+		cp "../linux/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb" ./ && \
 		mkimage -f linux.its linux.itb
 
-TEE_TZDRAM_START = 0xbdc00000
+TEE_TZDRAM_START = $(TEE_LOAD_ADDR)
 TEE_TZDRAM_SIZE = 0x4000000
 TEE_SHMEM_START = 0xc1c00000
 TEE_SHMEM_SIZE = 0x400000
@@ -77,8 +82,8 @@ op-tee:
 		CFG_TZDRAM_START=$(TEE_TZDRAM_START) \
 		CFG_TZDRAM_SIZE=$(TEE_TZDRAM_SIZE) \
 		CFG_TEE_SHMEM_START=$(TEE_SHMEM_START) \
-		CFG_TEE_SHMEM_SIZE=$(CFG_TEE_SHMEM_SIZE)
-
+		CFG_TEE_SHMEM_SIZE=$(TEE_SHMEM_SIZE) \
+		CFG_UART_BASE=$(UART_BASE)
 
 clean:
 	rm -rf \
