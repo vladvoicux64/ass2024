@@ -1,7 +1,7 @@
 # This Makefile works on Aarch64 based environments.
 
 ATF_DIR = imx-atf
-ATF_MAKE_FLAGS = SPD=none PLAT=imx8mq
+ATF_MAKE_FLAGS = SPD=opteed PLAT=imx8mq BL32_BASE=0xbdc00000 BL32_SIZE=0x4400000 LOG_LEVEL=40 IMX_BOOT_UART_BASE=0x30860000
 atf:
 	cd "$(ATF_DIR)" && \
 	make $(ATF_MAKE_FLAGS)
@@ -65,6 +65,20 @@ TEE_TZDRAM_SIZE = 0x4000000
 TEE_SHMEM_START = 0xc1c00000
 TEE_SHMEM_SIZE = 0x400000
 TEE_RAM_TOTAL_SIZE = 0x4400000
+op-tee:
+	cd optee_os && \
+		make \
+    CFG_TEE_BENCHMARK=n \
+    CFG_TEE_CORE_LOG_LEVEL=3 \
+		DEBUG=1 \
+    O=out/arm \
+    PLATFORM=imx-mx8mqevk \
+		CFG_DDR_SIZE=0x80000000 \
+		CFG_TZDRAM_START=$(TEE_TZDRAM_START) \
+		CFG_TZDRAM_SIZE=$(TEE_TZDRAM_SIZE) \
+		CFG_TEE_SHMEM_START=$(TEE_SHMEM_START) \
+		CFG_TEE_SHMEM_SIZE=$(CFG_TEE_SHMEM_SIZE)
+
 
 clean:
 	rm -rf \
