@@ -16,7 +16,7 @@ uboot:
 		./scripts/kconfig/merge_config.sh ".config" "uboot-extra.config" && \
 		make $(UBOOT_MAKE_FLAGS)
 
-.PHONY: uboot atf firmware_pkg flash linux
+.PHONY: uboot atf firmware_pkg flash linux buildroot
 
 FW_PCKG_DIR = imx-mkimage/iMX8M
 FW_DIR = firmware-imx-8.22/firmware
@@ -55,14 +55,15 @@ linux:
 
 buildroot:
 	cp -f buildroot-extra.config "buildroot/"
-	cd "buildroot""&& \
+	cd "buildroot" && \
 		[[ -f ".config" ]] || make imx8mqevk_defconfig && \
 		./support/kconfig/merge_config.sh ".config" "buildroot-extra.config" && \
 		make
 
-fit:
+fit: buildroot
 	cd "staging" && \
 		cp "../linux/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb" ./ && \
+		cp "../buildroot/output/images/rootfs.cpio" ./ && \
 		mkimage -f linux.its linux.itb
 
 TEE_TZDRAM_START = $(TEE_LOAD_ADDR)
