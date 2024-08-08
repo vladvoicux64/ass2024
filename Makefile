@@ -35,12 +35,12 @@ MKIMAGE_COPY_FILES = \
 firmware_pkg: uboot op-tee atf
 	cp -f "$(UBOOT_DIR)/tools/mkimage" "$(FW_PCKG_DIR)/mkimage_uboot" && \
 	cp -f $(MKIMAGE_COPY_FILES) "$(FW_PCKG_DIR)/" && \
-	cp -f "$(OP_TEE_DIR)/out/arm/core/tee-raw.bin" "$(FW_PCKG_DIR)/" && \
+	cp -f "$(OP_TEE_DIR)/out/arm/core/tee-raw.bin" "$(FW_PCKG_DIR)/tee.bin" && \
 	cd "imx-mkimage" && \
-	make SOC=iMX8M dtbs=imx8mq-pico-pi.dtb flash_evk
+	make SOC=iMX8M dtbs=imx8mq-pico-pi.dtb TEE_LOAD_ADDR=$(TEE_LOAD_ADDR) flash_evk
 
 UUU_DIR = mfgtools/build/uuu
-flash_prep: atf uboot firmware_pkg
+flash_prep: firmware_pkg
 	cd mfgtools && \
 	mkdir build && cd build && cmake .. && cmake --build .
 
@@ -68,7 +68,7 @@ fit: buildroot
 
 TEE_TZDRAM_START = $(TEE_LOAD_ADDR)
 TEE_TZDRAM_SIZE = 0x4000000
-TEE_SHMEM_START = 0xc1c00000
+TEE_SHMEM_START = 0xbfc00000
 TEE_SHMEM_SIZE = 0x400000
 TEE_RAM_TOTAL_SIZE = 0x4400000
 op-tee:
