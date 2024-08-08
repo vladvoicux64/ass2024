@@ -29,7 +29,7 @@ MKIMAGE_COPY_FILES = \
 	$(UBOOT_DIR)/spl/u-boot-spl.bin \
 	$(UBOOT_DIR)/u-boot-nodtb.bin \
 	$(UBOOT_DIR)/arch/arm/dts/imx8mq-pico-pi.dtb
-firmware_pkg:
+firmware_pkg: uboot
 	cp -f "$(UBOOT_DIR)/tools/mkimage" "$(FW_PCKG_DIR)/mkimage_uboot" && \
 	cp -f $(MKIMAGE_COPY_FILES) "$(FW_PCKG_DIR)/" && \
 	cd "imx-mkimage" && \
