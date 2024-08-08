@@ -60,6 +60,12 @@ fit:
 	cd "staging" && \
 		mkimage -f linux.its linux.itb
 
+TEE_TZDRAM_START = 0xbdc00000
+TEE_TZDRAM_SIZE = 0x4000000
+TEE_SHMEM_START = 0xc1c00000
+TEE_SHMEM_SIZE = 0x400000
+TEE_RAM_TOTAL_SIZE = 0x4400000
+
 clean:
 	rm -rf \
 	$(ATF_DIR)/build/imx8mq/release/bl31.bin \
