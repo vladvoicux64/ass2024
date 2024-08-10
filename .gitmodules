@@ -1,27 +1,27 @@
 [submodule "imx-atf"]
-	path = imx-atf
+	path = modules/imx-atf
 	url = https://github.com/nxp-imx/imx-atf.git
 [submodule "u-boot-tn-imx"]
-	path = u-boot-tn-imx
+	path = modules/u-boot-tn-imx
 	url = https://github.com/TechNexion/u-boot-tn-imx.git
 [submodule "imx-mkimage"]
-	path = imx-mkimage
+	path = modules/imx-mkimage
 	url = https://github.com/nxp-imx/imx-mkimage.git
 [submodule "mfgtools"]
-	path = mfgtools
+	path = modules/mfgtools
 	url = https://github.com/nxp-imx/mfgtools.git
 [submodule "linux"]
-	path = linux
+	path = modules/linux
 	url = https://github.com/torvalds/linux.git
 [submodule "buildroot"]
-	path = buildroot
+	path = modules/buildroot
 	url = https://github.com/buildroot/buildroot.git
 [submodule "optee_os"]
-	path = optee_os
+	path = modules/optee_os
 	url = https://github.com/OP-TEE/optee_os.git
 [submodule "optee_client"]
-	path = optee_client
+	path = modules/optee_client
 	url = https://github.com/OP-TEE/optee_client.git
 [submodule "optee_examples"]
-	path = optee_examples
+	path = modules/optee_examples
 	url = https://github.com/linaro-swg/optee_examples
