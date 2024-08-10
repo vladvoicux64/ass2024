@@ -1,0 +1,1 @@
+cmd_/home/vladvoicux64/ass2024/kmod/my_first_module.ko := ld -r -EL  -maarch64elf -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm64/module.lds -o /home/vladvoicux64/ass2024/kmod/my_first_module.ko /home/vladvoicux64/ass2024/kmod/my_first_module.o /home/vladvoicux64/ass2024/kmod/my_first_module.mod.o;  true

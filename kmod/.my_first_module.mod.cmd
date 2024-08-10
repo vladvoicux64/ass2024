@@ -1,0 +1,1 @@
+cmd_/home/vladvoicux64/ass2024/kmod/my_first_module.mod := printf '%s\n'   my_first_module.o | awk '!x[$$0]++ { print("/home/vladvoicux64/ass2024/kmod/"$$0) }' > /home/vladvoicux64/ass2024/kmod/my_first_module.mod
