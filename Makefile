@@ -1,16 +1,16 @@
 # This Makefile works on Aarch64 based environments.
 
 UART_BASE = 0x30860000
-ATF_DIR = imx-atf
+ATF_DIR = modules/imx-atf
 ATF_MAKE_FLAGS = SPD=opteed PLAT=imx8mq BL32_BASE=0xbdc00000 BL32_SIZE=0x2400000 LOG_LEVEL=40 IMX_BOOT_UART_BASE=$(UART_BASE)
 atf:
 	cd "$(ATF_DIR)" && \
 	make $(ATF_MAKE_FLAGS)
  
-UBOOT_DIR = u-boot-tn-imx
+UBOOT_DIR = modules/u-boot-tn-imx
 UBOOT_MAKE_FLAGS =
 uboot:
-	cp -f uboot-extra.config $(UBOOT_DIR)/
+	cp -f configs/uboot-extra.config configs/uboot-default.env $(UBOOT_DIR)/
 	cd "$(UBOOT_DIR)" && \
 		[[ -f ".config" ]] || make pico-imx8mq_defconfig && \
 		./scripts/kconfig/merge_config.sh ".config" "uboot-extra.config" && \
@@ -18,10 +18,10 @@ uboot:
 
 .PHONY: uboot atf firmware_pkg flash linux buildroot
 
-FW_PCKG_DIR = imx-mkimage/iMX8M
-FW_DIR = firmware-imx-8.22/firmware
+FW_PCKG_DIR = modules/imx-mkimage/iMX8M
+FW_DIR = modules/firmware-imx-8.22/firmware
 TEE_LOAD_ADDR=0xbdc00000
-OP_TEE_DIR = optee_os
+OP_TEE_DIR = modules/optee_os
 MKIMAGE_COPY_FILES = \
 	$(FW_DIR)/ddr/synopsys/lpddr4_pmu_train_1d_dmem.bin \
 	$(FW_DIR)/ddr/synopsys/lpddr4_pmu_train_1d_imem.bin \
@@ -36,12 +36,12 @@ firmware_pkg: uboot op-tee atf
 	cp -f "$(UBOOT_DIR)/tools/mkimage" "$(FW_PCKG_DIR)/mkimage_uboot" && \
 	cp -f $(MKIMAGE_COPY_FILES) "$(FW_PCKG_DIR)/" && \
 	cp -f "$(OP_TEE_DIR)/out/arm/core/tee-raw.bin" "$(FW_PCKG_DIR)/tee.bin" && \
-	cd "imx-mkimage" && \
+	cd "modules/imx-mkimage" && \
 	make SOC=iMX8M dtbs=imx8mq-pico-pi.dtb TEE_LOAD_ADDR=$(TEE_LOAD_ADDR) flash_evk
 
-UUU_DIR = mfgtools/build/uuu
+UUU_DIR = modules/mfgtools/build/uuu
 flash_prep: firmware_pkg
-	cd mfgtools && \
+	cd modules/mfgtools && \
 	mkdir build && cd build && cmake .. && cmake --build .
 
 flash: flash_prep
@@ -49,21 +49,21 @@ flash: flash_prep
 	sudo ./uuu -b spl ../../../imx-mkimage/iMX8M/flash.bin
 
 linux:
-	cd linux && \
+	cd modules/linux && \
 	make ARCH=arm64 defconfig && \
 	make ARCH=arm64 -j4
 
 buildroot:
-	cp -f buildroot-extra.config "buildroot/"
-	cd "buildroot" && \
+	cp -f configs/buildroot-extra.config "buildroot/"
+	cd "modules/buildroot" && \
 		[[ -f ".config" ]] || make imx8mqevk_defconfig && \
 		./support/kconfig/merge_config.sh ".config" "buildroot-extra.config" && \
 		make
 
 fit: buildroot
 	cd "staging" && \
-		cp "../linux/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb" ./ && \
-		cp "../buildroot/output/images/rootfs.cpio" ./ && \
+		cp "../modules/linux/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb" ./ && \
+		cp "../modules/buildroot/output/images/rootfs.cpio" ./ && \
 		mkimage -f linux.its linux.itb
 
 TEE_TZDRAM_START = $(TEE_LOAD_ADDR)
@@ -72,7 +72,7 @@ TEE_SHMEM_START = 0xbfc00000
 TEE_SHMEM_SIZE = 0x400000
 TEE_RAM_TOTAL_SIZE = 0x2400000
 op-tee:
-	cd optee_os && \
+	cd modules/optee_os && \
 		make \
     CFG_TEE_BENCHMARK=n \
     CFG_TEE_CORE_LOG_LEVEL=3 \
@@ -94,5 +94,5 @@ clean:
 	$(UBOOT_DIR)/arch/arm/dts/imx8mq-pico-pi.dtb \
 	"$(FW_PCKG_DIR)/mkimage_uboot" \
 	"$(FW_PCKG_DIR)/flash.bin" \
-	"mfgtools/build" \
+	"modules/mfgtools/build" \
 	$(OP_TEE_DIR)/out
