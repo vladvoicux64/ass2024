@@ -2,7 +2,7 @@
 
 UART_BASE = 0x30860000
 ATF_DIR = imx-atf
-ATF_MAKE_FLAGS = SPD=opteed PLAT=imx8mq BL32_BASE=0xbdc00000 BL32_SIZE=0x4400000 LOG_LEVEL=40 IMX_BOOT_UART_BASE=$(UART_BASE)
+ATF_MAKE_FLAGS = SPD=opteed PLAT=imx8mq BL32_BASE=0xbdc00000 BL32_SIZE=0x2400000 LOG_LEVEL=40 IMX_BOOT_UART_BASE=$(UART_BASE)
 atf:
 	cd "$(ATF_DIR)" && \
 	make $(ATF_MAKE_FLAGS)
@@ -70,7 +70,7 @@ TEE_TZDRAM_START = $(TEE_LOAD_ADDR)
 TEE_TZDRAM_SIZE = 0x4000000
 TEE_SHMEM_START = 0xbfc00000
 TEE_SHMEM_SIZE = 0x400000
-TEE_RAM_TOTAL_SIZE = 0x4400000
+TEE_RAM_TOTAL_SIZE = 0x2400000
 op-tee:
 	cd optee_os && \
 		make \
@@ -94,4 +94,5 @@ clean:
 	$(UBOOT_DIR)/arch/arm/dts/imx8mq-pico-pi.dtb \
 	"$(FW_PCKG_DIR)/mkimage_uboot" \
 	"$(FW_PCKG_DIR)/flash.bin" \
-	"mfgtools/build"
+	"mfgtools/build" \
+	$(OP_TEE_DIR)/out
